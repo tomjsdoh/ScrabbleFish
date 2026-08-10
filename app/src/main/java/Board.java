@@ -184,20 +184,6 @@ public class Board {
         }
     }
 
-    public void insertTile(int x, int y, Tile tile) {
-        board[x][y].setTile(tile);
-
-        if (hasHorizontalNeighbour(x, y) && readHorizontalWord(x, y) == null) {
-            board[x][y].setTile(null);
-            throw new InvalidWord("Invalid horizontal word.");
-        }
-
-        if (hasVerticalNeighbour(x, y) && readVerticalWord(x, y) == null) {
-            board[x][y].setTile(null);
-            throw new InvalidWord("Invalid vertical word.");
-        }
-    }
-
     // custom error for invalid word
     public final class InvalidWord extends RuntimeException {
         public InvalidWord(String message) {

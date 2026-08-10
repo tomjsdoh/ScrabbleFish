@@ -11,7 +11,7 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        rack = new ArrayList<>();
+        rack = new ArrayList<Tile>();
         this.score = 0;
 
     }
@@ -40,21 +40,22 @@ public class Player {
         score = score + addedScore;
     }
 
-    public void playTurn(TileBag tileBag, Board board, Scanner scanner) {
-        boolean turnComplete = false;
+    public boolean playTurn(TileBag tileBag, Board board, Scanner scanner) {
         System.out.println("It is player " + name + "'s turn.");
-        while (!turnComplete) {
-            printScore();
-            System.out.println("Would you like to play a tile?");
+        printScore();
+
+        while (true) {
+            System.out.println("Would you like to play a tile? (Y/N): ");
             String answer = scanner.next();
+
             if (answer.equalsIgnoreCase("Y")) {
                 playTile(tileBag, board, scanner);
-                turnComplete = true;
+                return false;
             } else if (answer.equalsIgnoreCase("N")) {
-                turnComplete = true;
-            } else {
-                System.out.println("Invalid answer!");
+                return true;
             }
+
+            System.out.println("Invalid answer!");
         }
     }
 
@@ -62,7 +63,8 @@ public class Player {
         // tiles are staged on a scratch board/rack until the whole turn is
         // confirmed valid, so a bad word never touches the real game state
         Board tempBoard = new Board(board);
-        ArrayList<Tile> tempRack = (ArrayList<Tile>) rack.clone();
+
+        ArrayList<Tile> tempRack = new ArrayList<>(rack);
 
         List<Tile> playedLetters = new ArrayList<>();
         List<int[]> playedPositions = new ArrayList<>();
@@ -170,5 +172,21 @@ public class Player {
         System.out.println(name + " scored " + turnScore + " points!");
 
         return playedLetters;
+    }
+
+    public boolean isRackEmpty() {
+        if (rack.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public String getName() {
+        return name;
     }
 }

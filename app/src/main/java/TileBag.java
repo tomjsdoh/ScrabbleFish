@@ -57,7 +57,13 @@ public class TileBag {
 
     public Tile getRandomTile() {
         Random random = new Random();
-        return tiles.get(random.nextInt(0, tiles.size()));
+        Tile tile = tiles.get(random.nextInt(0, tiles.size()));
+        removeTile(tile);
+        return tile;
 
+    }
+
+    private void removeTile(Tile tile) {
+        tiles.remove(tile);
     }
 }

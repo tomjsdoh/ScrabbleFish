@@ -9,3 +9,6 @@ build
 
 # Ignore compiled class files
 *.class
+
+# Ignore local todo
+.todo

@@ -24,13 +24,42 @@ public class Game {
         Player player2 = new Player(scanner.nextLine());
         player2.drawTiles(tileBag);
 
+        int passCount = 0;
         // game loops
         while (!gameFinished) {
-            board.printBoard();
-            player1.playTurn(tileBag, board, scanner);
 
+            // player 1 turn
             board.printBoard();
-            player2.playTurn(tileBag, board, scanner);
+            boolean played1 = player1.playTurn(tileBag, board, scanner);
+
+            // player 2 turn
+            board.printBoard();
+            boolean played2 = player2.playTurn(tileBag, board, scanner);
+
+            if (!played1 && !played2) {
+                passCount += 2;
+            } else {
+                passCount = 0;
+            }
+
+            if ((player1.isRackEmpty() || player2.isRackEmpty()) && tileBag.isEmpty()) {
+                gameFinished = true;
+            } else if (passCount >= 4) {
+                gameFinished = true;
+            }
+        }
+
+        if (player1.getScore() == player2.getScore()) {
+            System.out.println("AAAAAAAND it's a draw... :(");
+        } else {
+            Player winner = null;
+            if (player1.getScore() > player2.getScore()) {
+                winner = player1;
+            } else {
+                winner = player2;
+            }
+            System.out.println("THE WINNER IS....");
+            System.out.println(winner.getName().toUpperCase() + "!");
         }
 
     }
