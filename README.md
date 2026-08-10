@@ -1,1 +1,1 @@
-hi
+An in-progress engine for Scrabble. Currently implements [legal move generation / scoring by points / special tiles / basic terminal gui]. Planned: deeper move evaluation, potentially exploring minimax-style lookahead or ML-based position evaluation, inspired by how chess engines like Stockfish approach move selection."
