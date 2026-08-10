@@ -9,7 +9,7 @@ public class Game {
         // init dictionary
         Dictionary dictionary = new Dictionary();
         // initialise board
-        Board board = new Board(15, dictionary);
+        Board board = new Board(dictionary);
 
         // init tilebag
         TileBag tileBag = new TileBag();

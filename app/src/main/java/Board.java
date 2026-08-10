@@ -6,9 +6,9 @@ public class Board {
     private int size;
     private Dictionary dictionary;
 
-    public Board(int size, Dictionary dictionary) {
+    public Board(Dictionary dictionary) {
         // initialises board with empty spaces.
-        this.size = size;
+        size = 15;
         board = new Space[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -196,7 +196,7 @@ public class Board {
 
     // a space is valid to place on if it's on the board and not already occupied
     public boolean isSpaceValid(int x, int y) {
-        if (x >= 0 && x < 15 && y >= 0 && y < 15 && board[x][y].getTile() == null) {
+        if (x >= 0 && x < size && y >= 0 && y < size && board[x][y].getTile() == null) {
             return true;
         } else {
             return false;
