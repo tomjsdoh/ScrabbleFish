@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(javac -d /tmp/scrabble_build *.java)"
+    ]
+  }
+}

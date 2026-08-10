@@ -19,7 +19,7 @@ public class TileBag {
     }
 
     private void addTiles(char letter, int score, int amount) {
-        for (int i = 0; i <= amount; i++) {
+        for (int i = 0; i < amount; i++) {
             tiles.add(new Tile(letter, score));
         }
     }

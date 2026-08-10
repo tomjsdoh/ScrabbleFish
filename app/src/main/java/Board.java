@@ -25,9 +25,21 @@ public class Board {
 
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                board[row][col] = new Space(other.board[row][col].getType());
+                Space otherSpace = other.board[row][col];
+                board[row][col] = new Space(otherSpace.getType());
+                board[row][col].setTile(otherSpace.getTile());
             }
         }
+    }
+
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
+
+    // places a tile without validating the word it forms; used while a turn is
+    // still being assembled and intermediate placements aren't yet complete words
+    public void placeTile(int row, int col, Tile tile) {
+        board[row][col].setTile(tile);
     }
 
     // initialise special tiles
@@ -267,12 +279,12 @@ public class Board {
         }
     }
 
-    private boolean hasHorizontalNeighbour(int row, int col) {
+    public boolean hasHorizontalNeighbour(int row, int col) {
         return (col > 0 && board[row][col - 1].getTile() != null) ||
                 (col < size - 1 && board[row][col + 1].getTile() != null);
     }
 
-    private boolean hasVerticalNeighbour(int row, int col) {
+    public boolean hasVerticalNeighbour(int row, int col) {
         return (row > 0 && board[row - 1][col].getTile() != null) ||
                 (row < size - 1 && board[row + 1][col].getTile() != null);
     }

@@ -27,10 +27,10 @@ public class Game {
         // game loops
         while (!gameFinished) {
             board.printBoard();
-            player1.playTile(tileBag, board, scanner);
+            player1.playTurn(tileBag, board, scanner);
 
             board.printBoard();
-            player2.playTile(tileBag, board, scanner);
+            player2.playTurn(tileBag, board, scanner);
         }
 
     }

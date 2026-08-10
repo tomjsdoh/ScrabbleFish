@@ -1,7 +1,8 @@
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 public class Player {
     private String name;
@@ -46,9 +47,10 @@ public class Player {
             printScore();
             System.out.println("Would you like to play a tile?");
             String answer = scanner.next();
-            if (answer == "Y") {
+            if (answer.equalsIgnoreCase("Y")) {
                 playTile(tileBag, board, scanner);
-            } else if (answer == "N") {
+                turnComplete = true;
+            } else if (answer.equalsIgnoreCase("N")) {
                 turnComplete = true;
             } else {
                 System.out.println("Invalid answer!");
@@ -57,65 +59,116 @@ public class Player {
     }
 
     public List<Tile> playTile(TileBag tileBag, Board board, Scanner scanner) {
-        boolean validTurn = false;
-
-        // create list of played letters
-        List<Tile> playedLetters = new ArrayList<>();
-
-        // creates copy of board7
+        // tiles are staged on a scratch board/rack until the whole turn is
+        // confirmed valid, so a bad word never touches the real game state
         Board tempBoard = new Board(board);
-
-        // create copy of rack
         ArrayList<Tile> tempRack = (ArrayList<Tile>) rack.clone();
 
-        List<Map<Integer, Integer>> newList = new ArrayList<>();
-        while (!validTurn) {
-            System.out.println("\n");
-            System.out.println(name + "'s rack: ");
+        List<Tile> playedLetters = new ArrayList<>();
+        List<int[]> playedPositions = new ArrayList<>();
+
+        boolean placingTiles = true;
+        while (placingTiles) {
+            System.out.println("\n" + name + "'s rack: ");
             printRack(tempRack);
 
             // input letter
             System.out.println("What letter would you like to play?: ");
-            char letter = scanner.next().charAt(0);
+            char letter = Character.toUpperCase(scanner.next().charAt(0));
 
-            // input x coordinate
-            System.out.println("Please provide the x coordinate for your tile: ");
-            int y = scanner.nextInt() - 1;
+            // input row
+            System.out.println("Please provide the row for your tile (1-15): ");
+            int row = scanner.nextInt() - 1;
 
-            // input y coordinate
-            System.out.println("Please provide the y coordinate for your tile: ");
-            int x = scanner.nextInt() - 1;
+            // input column
+            System.out.println("Please provide the column for your tile (1-15): ");
+            int col = scanner.nextInt() - 1;
 
-            // checks if x and y coordinates are in bounds
-            if (tempBoard.isSpaceValid(x, y)) {
-                Tile playedLetter = null;
-
-                // searches for letter in player's rack
-                for (Tile tile : tempRack) {
-                    if (tile.getLetter() == letter) {
-                        playedLetter = tile;
-                    }
-                }
-
-                // if player has the letter they say they do
-                if (playedLetter != null) {
-                    // remove letter from their rack
-                    tempRack.remove(playedLetter);
-
-                    // add letter to playedLetters list
-                    playedLetters.add(playedLetter);
-                    // tells player if bag is empty.
-                    // if it is not player recieves new random tile from tile bag.
-                    if (tileBag.isEmpty()) {
-                        System.out.println("Bag is empty!");
-                    }
-                } else {
-                    System.out.println("invalid move.");
-                }
-                // tells player coords are invalid and then repeats loop till correct.
-            } else {
+            if (!tempBoard.isSpaceValid(row, col)) {
                 System.out.println("Invalid coordinates!");
+                continue;
+            }
+
+            // searches for letter in player's rack
+            Tile playedLetter = null;
+            for (Tile tile : tempRack) {
+                if (tile.getLetter() == letter) {
+                    playedLetter = tile;
+                    break;
+                }
+            }
+
+            if (playedLetter == null) {
+                System.out.println("You don't have that letter.");
+                continue;
+            }
+
+            tempRack.remove(playedLetter);
+            tempBoard.placeTile(row, col, playedLetter);
+            playedLetters.add(playedLetter);
+            playedPositions.add(new int[] { row, col });
+
+            System.out.println("Place another tile? (Y/N): ");
+            if (scanner.next().equalsIgnoreCase("N")) {
+                placingTiles = false;
             }
         }
+
+        // validate every word touched by this turn's tiles
+        Set<String> words = new HashSet<>();
+        boolean allValid = true;
+        for (int[] pos : playedPositions) {
+            int row = pos[0];
+            int col = pos[1];
+
+            if (tempBoard.hasHorizontalNeighbour(row, col)) {
+                String horizontal = tempBoard.readHorizontalWord(row, col);
+                if (horizontal == null) {
+                    allValid = false;
+                } else {
+                    words.add(horizontal);
+                }
+            }
+
+            if (tempBoard.hasVerticalNeighbour(row, col)) {
+                String vertical = tempBoard.readVerticalWord(row, col);
+                if (vertical == null) {
+                    allValid = false;
+                } else {
+                    words.add(vertical);
+                }
+            }
+        }
+
+        if (!allValid) {
+            System.out.println("That doesn't form valid word(s). Turn cancelled.");
+            return new ArrayList<>();
+        }
+
+        // commit the staged placements to the real board
+        for (int i = 0; i < playedPositions.size(); i++) {
+            int[] pos = playedPositions.get(i);
+            board.placeTile(pos[0], pos[1], playedLetters.get(i));
+        }
+
+        // commit the staged rack, then draw replacements for the played tiles
+        rack.clear();
+        rack.addAll(tempRack);
+        for (int i = 0; i < playedLetters.size(); i++) {
+            if (tileBag.isEmpty()) {
+                System.out.println("Bag is empty!");
+                break;
+            }
+            rack.add(tileBag.getRandomTile());
+        }
+
+        int turnScore = 0;
+        for (String word : words) {
+            turnScore += board.getDictionary().calculateWordValue(word);
+        }
+        addScore(turnScore);
+        System.out.println(name + " scored " + turnScore + " points!");
+
+        return playedLetters;
     }
 }
