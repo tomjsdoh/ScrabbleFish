@@ -1,8 +1,20 @@
 public class Space {
-    private boolean hasTile;
+    private Tile tile;
 
     public Space() {
-        hasTile = false;
+        tile = null;
+    }
+
+    public Tile getTile() {
+        return tile;
+    }
+
+    public void setTile(Tile newTile) {
+        tile = newTile;
+    }
+
+    public char getTileLetter() {
+        return tile.getLetter();
     }
 
 }

@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.random.*;
 
 public class TileBag {
     private ArrayList<Tile> tiles;
 
     public TileBag() {
         tiles = new ArrayList<Tile>();
+        initializeTiles();
 
     }
 
@@ -43,5 +46,11 @@ public class TileBag {
         addTiles('Z', 10, 1);
 
         addTiles(' ', 0, 2); // blanks
+    }
+
+    public Tile getRandomTile() {
+        Random random = new Random();
+        return tiles.get(random.nextInt(0, tiles.size()));
+
     }
 }
