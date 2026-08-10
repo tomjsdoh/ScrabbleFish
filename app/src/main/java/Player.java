@@ -49,8 +49,8 @@ public class Player {
             String answer = scanner.next();
 
             if (answer.equalsIgnoreCase("Y")) {
-                playTile(tileBag, board, scanner, firstMove);
-                return false;
+                firstMove = playTile(tileBag, board, scanner, firstMove);
+                return firstMove;
             } else if (answer.equalsIgnoreCase("N")) {
                 return true;
             }
@@ -59,7 +59,7 @@ public class Player {
         }
     }
 
-    public List<Tile> playTile(TileBag tileBag, Board board, Scanner scanner, boolean firstMove) {
+    public boolean playTile(TileBag tileBag, Board board, Scanner scanner, boolean firstMove) {
         // tiles are staged on a scratch board/rack until the whole turn is
         // confirmed valid, so a bad word never touches the real game state
         Board tempBoard = new Board(board);
@@ -102,7 +102,6 @@ public class Player {
 
             if (playedLetter == null) {
                 System.out.println("You don't have that letter.");
-                continue;
             }
 
             tempRack.remove(playedLetter);
@@ -126,7 +125,7 @@ public class Player {
             }
             if (!coversCenter) {
                 System.out.println("The first move must cover the center square.");
-                return new ArrayList<>();
+                return true;
             }
         }
 
@@ -158,7 +157,7 @@ public class Player {
 
         if (!allValid) {
             System.out.println("That doesn't form valid word(s). Turn cancelled.");
-            return new ArrayList<>();
+            return true;
         }
 
         // commit the staged placements to the real board
@@ -185,7 +184,7 @@ public class Player {
         addScore(turnScore);
         System.out.println(name + " scored " + turnScore + " points!");
 
-        return playedLetters;
+        return false;
     }
 
     public boolean isRackEmpty() {

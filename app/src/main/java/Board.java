@@ -220,7 +220,7 @@ public class Board {
         // builds word from start to end point
         for (int i = start; i <= end; i++) {
             stringBuilder.append(board[row][i].getSpaceLetter());
-            wordSpaces.add(board[row][i]);
+            wordSpaces.add(boardyow][i]);
         }
 
         // stores word
