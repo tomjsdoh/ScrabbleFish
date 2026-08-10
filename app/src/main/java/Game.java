@@ -53,12 +53,15 @@ public class Game {
                 break;
             }
         }
+
+        int p1FinalScore = calculateFinalScore(player1, player2, tileBag);
+        int p2FinalScore = calculateFinalScore(player2, player1, tileBag);
         // whoever has the higher score wins; equal scores are a draw
-        if (player1.getScore() == player2.getScore()) {
+        if (p1FinalScore == p2FinalScore) {
             System.out.println("AAAAAAAND it's a draw... :(");
         } else {
             Player winner = null;
-            if (player1.getScore() > player2.getScore()) {
+            if (p1FinalScore > p2FinalScore) {
                 winner = player1;
             } else {
                 winner = player2;
@@ -90,6 +93,26 @@ public class Game {
         } else {
             return false;
         }
+    }
+
+    // sums the point value of every tile left in a player's rack
+    public static int rackValue(Player player) {
+        int total = 0;
+        for (Tile tile : player.getRack()) {
+            total += tile.getValue();
+        }
+        return total;
+    }
+
+    // every player loses the value of their own unplayed tiles; if this player is
+    // the one who emptied their rack (ending the game), they also gain the value
+    // of the opponent's unplayed tiles
+    public static int calculateFinalScore(Player player, Player opponent, TileBag tileBag) {
+        int finalScore = player.getScore() - rackValue(player);
+        if (player.isRackEmpty() && tileBag.isEmpty()) {
+            finalScore += rackValue(opponent);
+        }
+        return finalScore;
     }
 
 }

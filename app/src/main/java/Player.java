@@ -118,7 +118,6 @@ public class Player {
                 System.out.println("You don't have that letter.");
                 continue;
             }
-
             tempRack.remove(playedLetter);
             tempBoard.placeTile(row, col, playedLetter);
             playedLetters.add(playedLetter);
