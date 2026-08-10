@@ -2,10 +2,14 @@ import java.util.Scanner;
 
 public class Game {
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
         boolean gameFinished = false;
+
+        // init dictionary
+        Dictionary dictionary = new Dictionary();
         // initialise board
-        Board board = new Board(15);
+        Board board = new Board(15, dictionary);
 
         // init tilebag
         TileBag tileBag = new TileBag();

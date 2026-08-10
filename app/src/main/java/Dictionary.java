@@ -40,9 +40,13 @@ public class Dictionary {
         int wordScore = 0;
 
         // calculates value for each letter then totals the words score
-        for (int i = 0; i < word.length(); i++) {
-            // uses values from letterValues
-            wordScore += letterValues.get(word.charAt(i));
+        if (word != null) {
+            for (int i = 0; i < word.length(); i++) {
+                // uses values from letterValues
+                wordScore += letterValues.get(word.charAt(i));
+            }
+        } else {
+            return 0;
         }
         return wordScore;
     }

@@ -1,8 +1,11 @@
+import Space.spaceTypes;
+
 public class Board {
     private Space[][] board;
     private int size;
+    private Dictionary dictionary;
 
-    public Board(int size) {
+    public Board(int size, Dictionary dictionary) {
         // initialises board with empty spaces.
         this.size = size;
         board = new Space[size][size];
@@ -11,6 +14,12 @@ public class Board {
                 board[i][j] = new Space();
             }
         }
+        this.dictionary = dictionary;
+    }
+
+    // initialise special tiles
+    public Board initialiseSpecialTiles(Board board) {
+
     }
 
     public char printSpace(int i, int j) {
@@ -32,22 +41,28 @@ public class Board {
     }
 
     public void insertTile(int x, int y, Tile tile) {
-        if (readHorizontalWord(x, y) != null && readVerticalWord(x, y) != null) {
-            board[x][y].setTile(tile);
-        } else {
-            throw new InvalidWord("Words constructed are not valid.");
+        board[x][y].setTile(tile);
+
+        if (hasHorizontalNeighbour(x, y) && readHorizontalWord(x, y) == null) {
+            board[x][y].setTile(null);
+            throw new InvalidWord("Invalid horizontal word.");
+        }
+
+        if (hasVerticalNeighbour(x, y) && readVerticalWord(x, y) == null) {
+            board[x][y].setTile(null);
+            throw new InvalidWord("Invalid vertical word.");
         }
     }
 
     // custom error for invalid word
-    public class InvalidWord extends RuntimeException {
+    public final class InvalidWord extends RuntimeException {
         public InvalidWord(String message) {
             super(message);
         }
     }
 
     public boolean isSpaceValid(int x, int y) {
-        if (x > 0 && x < 15 && y > 0 && y < 15 && board[x][y].getTile() == null) {
+        if (x >= 0 && x < 15 && y >= 0 && y < 15 && board[x][y].getTile() == null) {
             return true;
         } else {
             return false;
@@ -56,7 +71,6 @@ public class Board {
     }
 
     public String readHorizontalWord(int row, int col) {
-        Dictionary dictionary = new Dictionary();
 
         // init start and end of string
         int start = col;
@@ -74,7 +88,7 @@ public class Board {
         }
 
         // builds word from start to end point
-        for (int i = start; i <= col; i++) {
+        for (int i = start; i <= end; i++) {
             stringBuilder.append(board[row][i].getSpaceLetter());
         }
 
@@ -90,7 +104,6 @@ public class Board {
     }
 
     public String readVerticalWord(int row, int col) {
-        Dictionary dictionary = new Dictionary();
 
         // init start and end of string
         int start = row;
@@ -108,8 +121,8 @@ public class Board {
         }
 
         // builds word from start to end point
-        for (int i = start; i <= col; i++) {
-            stringBuilder.append(board[row][i].getSpaceLetter());
+        for (int i = start; i <= end; i++) {
+            stringBuilder.append(board[i][col].getSpaceLetter());
         }
 
         // stores word
@@ -121,5 +134,15 @@ public class Board {
         } else {
             return null;
         }
+    }
+
+    private boolean hasHorizontalNeighbour(int row, int col) {
+        return (col > 0 && board[row][col - 1].getTile() != null) ||
+                (col < size - 1 && board[row][col + 1].getTile() != null);
+    }
+
+    private boolean hasVerticalNeighbour(int row, int col) {
+        return (row > 0 && board[row - 1][col].getTile() != null) ||
+                (row < size - 1 && board[row + 1][col].getTile() != null);
     }
 }

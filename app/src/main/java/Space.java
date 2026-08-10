@@ -1,8 +1,18 @@
 public class Space {
     private Tile tile;
+    private spaceTypes spaceType;
 
-    public Space() {
+    public enum spaceTypes {
+        NONE,
+        DOUBLE_LETTER,
+        DOUBLE_WORD,
+        TRIPLE_LETTER,
+        TRIPPLE_WORD
+    }
+
+    public Space(spaceTypes spaceType) {
         tile = null;
+        this.spaceType = spaceType;
     }
 
     public Tile getTile() {
@@ -14,6 +24,10 @@ public class Space {
     }
 
     public char getSpaceLetter() {
+        if (tile == null) {
+            return '#';
+        }
+
         return tile.getLetter();
     }
 

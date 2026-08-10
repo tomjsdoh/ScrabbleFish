@@ -66,23 +66,26 @@ public class Player {
                 }
 
                 // if player has the letter they say they do
-                if (playedLetter != null && board.readHorizontalWord(x, y) != null
-                        && board.readVerticalWord(x, y) != null) {
+                if (playedLetter != null) {
                     // remove letter from their rack
                     rack.remove(playedLetter);
 
-                    // insert selected tile onto board
-                    board.insertTile(y, x, playedLetter);
-
-                    // indicates this is a valid turn
-                    validTurn = true;
+                    try {
+                        board.insertTile(x, y, playedLetter);
+                        validTurn = true;
+                    } catch (Board.InvalidWord e) {
+                        rack.add(playedLetter);
+                        System.out.println(e.getMessage());
+                    }
 
                     // adds scores of horizontal and vertical words together
                     String horizontalWord = board.readHorizontalWord(x, y);
-                    String readVerticalWord = board.readHorizontalWord(x, y);
+                    String verticalWord = board.readVerticalWord(x, y);
                     Dictionary dictionary = new Dictionary();
                     int addedScore = dictionary.calculateWordValue(horizontalWord)
-                            + dictionary.calculateWordValue(horizontalWord);
+                            + dictionary.calculateWordValue(verticalWord);
+
+                    // adds word scores to total
                     score += addedScore;
 
                     // tells player if bag is empty.
@@ -92,6 +95,8 @@ public class Player {
                     } else {
                         rack.add(tileBag.getRandomTile());
                     }
+                } else {
+                    System.out.println("invalid move.");
                 }
                 // tells player coords are invalid and then repeats loop till correct.
             } else {
