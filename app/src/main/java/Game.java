@@ -5,7 +5,6 @@ public class Game {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        boolean gameFinished = false;
 
         // init dictionary
         Dictionary dictionary = new Dictionary();
@@ -26,7 +25,8 @@ public class Game {
         player2.drawTiles(tileBag);
         boolean firstMove = true;
         int passCount = 0;
-        // game loops
+        boolean gameFinished = false;
+        // game loops, checking for game-over right after each individual turn
         while (!gameFinished) {
 
             // player 1 turn
@@ -35,6 +35,11 @@ public class Game {
             if (firstMove && result1 == Player.TurnResult.PLAYED) {
                 firstMove = false;
             }
+            passCount = updatePassCount(passCount, result1);
+            if (isGameOver(player1, player2, tileBag, passCount)) {
+                gameFinished = true;
+                break;
+            }
 
             // player 2 turn
             board.printBoard();
@@ -42,22 +47,12 @@ public class Game {
             if (firstMove && result2 == Player.TurnResult.PLAYED) {
                 firstMove = false;
             }
-
-            // only a genuine, voluntary pass counts toward the consecutive-pass
-            // end-game trigger — a rejected/invalid attempt does not
-            if (result1 == Player.TurnResult.PASSED && result2 == Player.TurnResult.PASSED) {
-                passCount += 2;
-            } else {
-                passCount = 0;
-            }
-
-            if ((player1.isRackEmpty() || player2.isRackEmpty()) && tileBag.isEmpty()) {
+            passCount = updatePassCount(passCount, result2);
+            if (isGameOver(player1, player2, tileBag, passCount)) {
                 gameFinished = true;
-            } else if (passCount >= 4) {
-                gameFinished = true;
+                break;
             }
         }
-
         // whoever has the higher score wins; equal scores are a draw
         if (player1.getScore() == player2.getScore()) {
             System.out.println("AAAAAAAND it's a draw... :(");
@@ -72,6 +67,29 @@ public class Game {
             System.out.println(winner.getName().toUpperCase() + "!");
         }
 
+    }
+
+    // updates passcount correctly dependent on action taken during turn
+    public static int updatePassCount(int passCount, Player.TurnResult result) {
+        if (result == Player.TurnResult.PASSED) {
+            return passCount + 1;
+        } else if (result == Player.TurnResult.PLAYED) {
+            return 0;
+        } else {
+            return passCount;
+        }
+    }
+
+    // game ends when either player has emptied their rack with an empty bag left to
+    // draw from, or after 4 consecutive passes
+    public static boolean isGameOver(Player player1, Player player2, TileBag tileBag, int passCount) {
+        if ((player1.isRackEmpty() || player2.isRackEmpty()) && tileBag.isEmpty()) {
+            return true;
+        } else if (passCount >= 4) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
