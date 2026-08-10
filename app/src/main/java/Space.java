@@ -15,6 +15,11 @@ public class Space {
         this.spaceType = SpaceType.NONE;
     }
 
+    public Space(SpaceType spaceType) {
+        tile = null;
+        this.spaceType = spaceType;
+    }
+
     public void setType(SpaceType type) {
         spaceType = type;
     }

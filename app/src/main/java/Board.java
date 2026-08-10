@@ -17,6 +17,19 @@ public class Board {
         this.dictionary = dictionary;
     }
 
+    public Board(Board other) {
+        size = other.size;
+        dictionary = other.dictionary;
+
+        board = new Space[size][size];
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                board[row][col] = new Space(other.board[row][col].getType());
+            }
+        }
+    }
+
     // initialise special tiles
     public void initialiseSpecialTiles() {
         int[][] tripleWords = {
