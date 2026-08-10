@@ -23,20 +23,27 @@ public class Game {
         System.out.println("Enter Player 2's name: ");
         Player player2 = new Player(scanner.nextLine());
         player2.drawTiles(tileBag);
-
+        boolean firstMove = true;
         int passCount = 0;
         // game loops
         while (!gameFinished) {
 
             // player 1 turn
             board.printBoard();
-            boolean played1 = player1.playTurn(tileBag, board, scanner);
+            boolean passed1 = player1.playTurn(tileBag, board, scanner, firstMove);
+            // checks if player 1 played turn
+            if (firstMove && !passed1) {
+                firstMove = false;
+            }
 
             // player 2 turn
             board.printBoard();
-            boolean played2 = player2.playTurn(tileBag, board, scanner);
+            boolean passed2 = player2.playTurn(tileBag, board, scanner, firstMove);
+            if (firstMove && !passed2) {
+                firstMove = false;
+            }
 
-            if (!played1 && !played2) {
+            if (passed1 && passed2) {
                 passCount += 2;
             } else {
                 passCount = 0;

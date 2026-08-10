@@ -40,7 +40,7 @@ public class Player {
         score = score + addedScore;
     }
 
-    public boolean playTurn(TileBag tileBag, Board board, Scanner scanner) {
+    public boolean playTurn(TileBag tileBag, Board board, Scanner scanner, boolean firstMove) {
         System.out.println("It is player " + name + "'s turn.");
         printScore();
 
@@ -49,7 +49,7 @@ public class Player {
             String answer = scanner.next();
 
             if (answer.equalsIgnoreCase("Y")) {
-                playTile(tileBag, board, scanner);
+                playTile(tileBag, board, scanner, firstMove);
                 return false;
             } else if (answer.equalsIgnoreCase("N")) {
                 return true;
@@ -59,7 +59,7 @@ public class Player {
         }
     }
 
-    public List<Tile> playTile(TileBag tileBag, Board board, Scanner scanner) {
+    public List<Tile> playTile(TileBag tileBag, Board board, Scanner scanner, boolean firstMove) {
         // tiles are staged on a scratch board/rack until the whole turn is
         // confirmed valid, so a bad word never touches the real game state
         Board tempBoard = new Board(board);
@@ -113,6 +113,20 @@ public class Player {
             System.out.println("Place another tile? (Y/N): ");
             if (scanner.next().equalsIgnoreCase("N")) {
                 placingTiles = false;
+            }
+        }
+
+        if (firstMove) {
+            boolean coversCenter = false;
+            for (int[] pos : playedPositions) {
+                if (pos[0] == 7 && pos[1] == 7) {
+                    coversCenter = true;
+                    break;
+                }
+            }
+            if (!coversCenter) {
+                System.out.println("The first move must cover the center square.");
+                return new ArrayList<>();
             }
         }
 

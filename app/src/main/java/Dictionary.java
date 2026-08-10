@@ -1,5 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,32 +7,33 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Dictionary {
+    private static final String FILE_NAME = "dictionary.txt";
+
     private Set<String> dictionary = new HashSet<>();
     private Map<Character, Integer> letterValues = new HashMap<>();
-    private final File file;
-    private String fileName;
 
     public Dictionary() {
-        fileName = "dictionary.txt";
-        file = new File(fileName);
         initialiseLetterValues();
         saveWords();
     }
 
     private void saveWords() {
-        try {
-            // init scanner
-            Scanner scanner = new Scanner(file);
+        try (InputStream stream = Dictionary.class.getClassLoader().getResourceAsStream(FILE_NAME)) {
+            if (stream == null) {
+                System.out.println("dictionary resource not found: " + FILE_NAME);
+                return;
+            }
 
             // takes each word from text dictionary and calculates its value
-            while (scanner.hasNextLine()) {
-                String word = scanner.nextLine().trim().toUpperCase();
-                // pairs word and value and adds to dictionary hashmap
-                dictionary.add(word);
+            try (Scanner scanner = new Scanner(stream)) {
+                while (scanner.hasNextLine()) {
+                    String word = scanner.nextLine().trim().toUpperCase();
+                    // pairs word and value and adds to dictionary hashmap
+                    dictionary.add(word);
+                }
             }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("file not found: " + file);
+        } catch (IOException e) {
+            System.out.println("failed to read dictionary resource: " + FILE_NAME);
         }
     }
 
