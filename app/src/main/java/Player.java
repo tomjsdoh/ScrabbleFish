@@ -48,11 +48,11 @@ public class Player {
 
             // input x coordinate
             System.out.println("Please provide the x coordinate for your tile: ");
-            int x = scanner.nextInt() - 1;
+            int y = scanner.nextInt() - 1;
 
             // input y coordinate
             System.out.println("Please provide the y coordinate for your tile: ");
-            int y = scanner.nextInt() - 1;
+            int x = scanner.nextInt() - 1;
 
             // checks if x and y coordinates are in bounds
             if (board.isSpaceValid(x, y)) {

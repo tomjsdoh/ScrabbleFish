@@ -1,18 +1,26 @@
 public class Space {
     private Tile tile;
-    private spaceTypes spaceType;
+    private SpaceType spaceType;
 
-    public enum spaceTypes {
+    public enum SpaceType {
         NONE,
         DOUBLE_LETTER,
         DOUBLE_WORD,
         TRIPLE_LETTER,
-        TRIPPLE_WORD
+        TRIPLE_WORD
     }
 
-    public Space(spaceTypes spaceType) {
+    public Space() {
         tile = null;
-        this.spaceType = spaceType;
+        this.spaceType = SpaceType.NONE;
+    }
+
+    public void setType(SpaceType type) {
+        spaceType = type;
+    }
+
+    public SpaceType getType() {
+        return spaceType;
     }
 
     public Tile getTile() {
