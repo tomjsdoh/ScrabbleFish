@@ -1,6 +1,8 @@
 
 import java.util.HashSet;
 
+// a validated word: its text plus the set of board spaces it occupies (used for
+// scoring and for de-duplicating a word read from more than one placed tile)
 public class WordVals {
     private String wordString;
     private HashSet<Space> wordSpaces;
@@ -24,6 +26,8 @@ public class WordVals {
         return wordSpaces;
     }
 
+    // two WordVals are the same word if they occupy the same set of spaces, so the
+    // same word read from two different placed tiles collapses to one entry in a Set
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

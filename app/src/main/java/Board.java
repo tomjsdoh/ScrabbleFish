@@ -1,5 +1,6 @@
 import java.util.HashSet;
 
+// the 15x15 grid of spaces, plus the word-reading and validity checks that operate on it
 public class Board {
     private Space[][] board;
     private int size;
@@ -18,6 +19,7 @@ public class Board {
         this.dictionary = dictionary;
     }
 
+    // deep copy used to stage a turn's placements without touching the real board
     public Board(Board other) {
         size = other.size;
         dictionary = other.dictionary;
@@ -175,6 +177,7 @@ public class Board {
 
     }
 
+    // prints the whole grid, row by row, using printSpace for each cell
     public void printBoard() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -191,6 +194,7 @@ public class Board {
         }
     }
 
+    // a space is valid to place on if it's on the board and not already occupied
     public boolean isSpaceValid(int x, int y) {
         if (x >= 0 && x < 15 && y >= 0 && y < 15 && board[x][y].getTile() == null) {
             return true;
@@ -275,11 +279,13 @@ public class Board {
         }
     }
 
+    // true if the space immediately left or right is occupied
     public boolean hasHorizontalNeighbour(int row, int col) {
         return (col > 0 && board[row][col - 1].getTile() != null) ||
                 (col < size - 1 && board[row][col + 1].getTile() != null);
     }
 
+    // true if the space immediately above or below is occupied
     public boolean hasVerticalNeighbour(int row, int col) {
         return (row > 0 && board[row - 1][col].getTile() != null) ||
                 (row < size - 1 && board[row + 1][col].getTile() != null);

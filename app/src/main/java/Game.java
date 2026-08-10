@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+// entry point: sets up a two-player game and runs the turn loop until it ends
 public class Game {
     public static void main(String[] args) {
 
@@ -30,20 +31,21 @@ public class Game {
 
             // player 1 turn
             board.printBoard();
-            boolean passed1 = player1.playTurn(tileBag, board, scanner, firstMove);
-            // checks if player 1 played turn
-            if (firstMove && !passed1) {
+            Player.TurnResult result1 = player1.playTurn(tileBag, board, scanner, firstMove);
+            if (firstMove && result1 == Player.TurnResult.PLAYED) {
                 firstMove = false;
             }
 
             // player 2 turn
             board.printBoard();
-            boolean passed2 = player2.playTurn(tileBag, board, scanner, firstMove);
-            if (firstMove && !passed2) {
+            Player.TurnResult result2 = player2.playTurn(tileBag, board, scanner, firstMove);
+            if (firstMove && result2 == Player.TurnResult.PLAYED) {
                 firstMove = false;
             }
 
-            if (passed1 && passed2) {
+            // only a genuine, voluntary pass counts toward the consecutive-pass
+            // end-game trigger — a rejected/invalid attempt does not
+            if (result1 == Player.TurnResult.PASSED && result2 == Player.TurnResult.PASSED) {
                 passCount += 2;
             } else {
                 passCount = 0;
@@ -56,6 +58,7 @@ public class Game {
             }
         }
 
+        // whoever has the higher score wins; equal scores are a draw
         if (player1.getScore() == player2.getScore()) {
             System.out.println("AAAAAAAND it's a draw... :(");
         } else {

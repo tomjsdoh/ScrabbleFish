@@ -1,3 +1,4 @@
+// a single letter tile with its point value (0 for a blank)
 public class Tile {
     private char letter;
     private int value;

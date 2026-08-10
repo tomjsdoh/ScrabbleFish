@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+// holds the valid-word list and per-letter point values used for scoring
 public class Dictionary {
     private static final String FILE_NAME = "dictionary.txt";
 
@@ -17,6 +18,7 @@ public class Dictionary {
         saveWords();
     }
 
+    // loads the word list from the bundled dictionary.txt resource
     private void saveWords() {
         try (InputStream stream = Dictionary.class.getClassLoader().getResourceAsStream(FILE_NAME)) {
             if (stream == null) {
@@ -37,6 +39,8 @@ public class Dictionary {
         }
     }
 
+    // scores a word: letter values (with letter multipliers) summed, then scaled
+    // by any word multipliers among the spaces it occupies
     public int calculateWordValue(WordVals word) {
         if (word == null) {
             return 0;
@@ -74,10 +78,10 @@ public class Dictionary {
     }
 
     public boolean isWord(String word) {
-        // if word score is NOT null, it must exist in the dictionary
         return dictionary.contains(word);
     }
 
+    // standard Scrabble letter point values
     private void initialiseLetterValues() {
         // initialises letters and their corresponding values.
         letterValues.put('A', 1);

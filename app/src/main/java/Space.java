@@ -1,3 +1,4 @@
+// a single square on the board: what bonus (if any) it gives, and the tile on it
 public class Space {
     private Tile tile;
     private SpaceType spaceType;
@@ -36,6 +37,7 @@ public class Space {
         tile = newTile;
     }
 
+    // the letter on this space, or '#' if it's empty
     public char getSpaceLetter() {
         if (tile == null) {
             return '#';
