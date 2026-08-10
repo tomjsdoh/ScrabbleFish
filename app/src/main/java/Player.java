@@ -115,14 +115,14 @@ public class Player {
         }
 
         // validate every word touched by this turn's tiles
-        Set<String> words = new HashSet<>();
+        Set<WordVals> words = new HashSet<>();
         boolean allValid = true;
         for (int[] pos : playedPositions) {
             int row = pos[0];
             int col = pos[1];
 
             if (tempBoard.hasHorizontalNeighbour(row, col)) {
-                String horizontal = tempBoard.readHorizontalWord(row, col);
+                WordVals horizontal = tempBoard.readHorizontalWord(row, col);
                 if (horizontal == null) {
                     allValid = false;
                 } else {
@@ -131,7 +131,7 @@ public class Player {
             }
 
             if (tempBoard.hasVerticalNeighbour(row, col)) {
-                String vertical = tempBoard.readVerticalWord(row, col);
+                WordVals vertical = tempBoard.readVerticalWord(row, col);
                 if (vertical == null) {
                     allValid = false;
                 } else {
@@ -163,8 +163,8 @@ public class Player {
         }
 
         int turnScore = 0;
-        for (String word : words) {
-            turnScore += board.getDictionary().calculateWordValue(word);
+        for (WordVals wordVal : words) {
+            turnScore += board.getDictionary().calculateWordValue(wordVal);
         }
         addScore(turnScore);
         System.out.println(name + " scored " + turnScore + " points!");

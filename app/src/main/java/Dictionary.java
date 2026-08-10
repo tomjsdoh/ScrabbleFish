@@ -36,19 +36,40 @@ public class Dictionary {
         }
     }
 
-    public int calculateWordValue(String word) {
-        int wordScore = 0;
-
-        // calculates value for each letter then totals the words score
-        if (word != null) {
-            for (int i = 0; i < word.length(); i++) {
-                // uses values from letterValues
-                wordScore += letterValues.get(word.charAt(i));
-            }
-        } else {
+    public int calculateWordValue(WordVals word) {
+        if (word == null) {
             return 0;
         }
-        return wordScore;
+
+        int letterScore = 0;
+        int wordMultiplier = 1;
+
+        // sums letter values (applying letter multipliers) and accumulates
+        // any word multipliers from the spaces the word occupies
+        for (Space space : word.getWordSpaces()) {
+            int letterValue = letterValues.get(space.getSpaceLetter());
+
+            switch (space.getType()) {
+                case Space.SpaceType.DOUBLE_LETTER:
+                    letterValue *= 2;
+                    break;
+                case Space.SpaceType.TRIPLE_LETTER:
+                    letterValue *= 3;
+                    break;
+                case Space.SpaceType.DOUBLE_WORD:
+                    wordMultiplier *= 2;
+                    break;
+                case Space.SpaceType.TRIPLE_WORD:
+                    wordMultiplier *= 3;
+                    break;
+                default:
+                    break;
+            }
+
+            letterScore += letterValue;
+        }
+
+        return letterScore * wordMultiplier;
     }
 
     public boolean isWord(String word) {

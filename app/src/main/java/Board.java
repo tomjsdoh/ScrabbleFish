@@ -1,3 +1,4 @@
+import java.util.HashSet;
 
 public class Board {
     private Space[][] board;
@@ -213,8 +214,8 @@ public class Board {
 
     }
 
-    public String readHorizontalWord(int row, int col) {
-
+    public WordVals readHorizontalWord(int row, int col) {
+        HashSet<Space> wordSpaces = new HashSet<>();
         // init start and end of string
         int start = col;
         int end = col;
@@ -233,6 +234,7 @@ public class Board {
         // builds word from start to end point
         for (int i = start; i <= end; i++) {
             stringBuilder.append(board[row][i].getSpaceLetter());
+            wordSpaces.add(board[row][i]);
         }
 
         // stores word
@@ -240,14 +242,17 @@ public class Board {
 
         // returns word if word is valid, otherwise null
         if (dictionary.isWord(word) == true) {
-            return word;
+            WordVals wordVals = new WordVals();
+            wordVals.setWordSpaces(wordSpaces);
+            wordVals.setWordString(word);
+            return wordVals;
         } else {
             return null;
         }
     }
 
-    public String readVerticalWord(int row, int col) {
-
+    public WordVals readVerticalWord(int row, int col) {
+        HashSet<Space> wordSpaces = new HashSet<>();
         // init start and end of string
         int start = row;
         int end = row;
@@ -266,6 +271,8 @@ public class Board {
         // builds word from start to end point
         for (int i = start; i <= end; i++) {
             stringBuilder.append(board[i][col].getSpaceLetter());
+            wordSpaces.add(board[i][col]);
+
         }
 
         // stores word
@@ -273,7 +280,10 @@ public class Board {
 
         // returns word if word is valid, otherwise null
         if (dictionary.isWord(word) == true) {
-            return word;
+            WordVals wordVals = new WordVals();
+            wordVals.setWordSpaces(wordSpaces);
+            wordVals.setWordString(word);
+            return wordVals;
         } else {
             return null;
         }
