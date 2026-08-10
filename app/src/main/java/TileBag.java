@@ -11,6 +11,14 @@ public class TileBag {
 
     }
 
+    public boolean isEmpty() {
+        if (tiles.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void addTiles(char letter, int score, int amount) {
         for (int i = 0; i <= amount; i++) {
             tiles.add(new Tile(letter, score));

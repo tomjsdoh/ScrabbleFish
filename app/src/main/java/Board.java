@@ -17,7 +17,7 @@ public class Board {
         if (board[i][j].getTile() == null) {
             return '#';
         } else {
-            return (board[i][j].getTileLetter());
+            return (board[i][j].getSpaceLetter());
         }
 
     }
@@ -32,10 +32,94 @@ public class Board {
     }
 
     public void insertTile(int x, int y, Tile tile) {
-        if (board[x][y].getTile() == null) {
+        if (readHorizontalWord(x, y) != null && readVerticalWord(x, y) != null) {
             board[x][y].setTile(tile);
         } else {
-            System.out.println("This space is already taken.");
+            throw new InvalidWord("Words constructed are not valid.");
+        }
+    }
+
+    // custom error for invalid word
+    public class InvalidWord extends RuntimeException {
+        public InvalidWord(String message) {
+            super(message);
+        }
+    }
+
+    public boolean isSpaceValid(int x, int y) {
+        if (x > 0 && x < 15 && y > 0 && y < 15 && board[x][y].getTile() == null) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public String readHorizontalWord(int row, int col) {
+        Dictionary dictionary = new Dictionary();
+
+        // init start and end of string
+        int start = col;
+        int end = col;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // finds start of word
+        while (start > 0 && board[row][start - 1].getTile() != null) {
+            start--;
+        }
+
+        // finds end of word
+        while (end < size - 1 && board[row][end + 1].getTile() != null) {
+            end++;
+        }
+
+        // builds word from start to end point
+        for (int i = start; i <= col; i++) {
+            stringBuilder.append(board[row][i].getSpaceLetter());
+        }
+
+        // stores word
+        String word = stringBuilder.toString();
+
+        // returns word if word is valid, otherwise null
+        if (dictionary.isWord(word) == true) {
+            return word;
+        } else {
+            return null;
+        }
+    }
+
+    public String readVerticalWord(int row, int col) {
+        Dictionary dictionary = new Dictionary();
+
+        // init start and end of string
+        int start = row;
+        int end = row;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // finds start of word
+        while (start > 0 && board[start - 1][col].getTile() != null) {
+            start--;
+        }
+
+        // finds end of word
+        while (end < size - 1 && board[end + 1][col].getTile() != null) {
+            end++;
+        }
+
+        // builds word from start to end point
+        for (int i = start; i <= col; i++) {
+            stringBuilder.append(board[row][i].getSpaceLetter());
+        }
+
+        // stores word
+        String word = stringBuilder.toString();
+
+        // returns word if word is valid, otherwise null
+        if (dictionary.isWord(word) == true) {
+            return word;
+        } else {
+            return null;
         }
     }
 }

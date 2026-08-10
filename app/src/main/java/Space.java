@@ -13,7 +13,7 @@ public class Space {
         tile = newTile;
     }
 
-    public char getTileLetter() {
+    public char getSpaceLetter() {
         return tile.getLetter();
     }
 
