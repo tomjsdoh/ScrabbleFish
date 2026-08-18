@@ -56,7 +56,7 @@ public class TileBag {
         addTiles('Y', 4, 2);
         addTiles('Z', 10, 1);
 
-        addTiles(' ', 0, 2); // blanks
+        addTiles('~', 0, 2); // blanks
     }
 
     // draws and removes a random tile from the bag

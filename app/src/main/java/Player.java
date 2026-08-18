@@ -51,6 +51,18 @@ public class Player {
         score = score + addedScore;
     }
 
+    // repeatedly prompts until the player enters a valid A-Z letter for a blank tile
+    private char readBlankLetter(Scanner scanner) {
+        while (true) {
+            System.out.println("What would you like this blank letter to be?");
+            char input = Character.toUpperCase(scanner.next().charAt(0));
+            if (input >= 'A' && input <= 'Z') {
+                return input;
+            }
+            System.out.println("Please enter a single letter A-Z.");
+        }
+    }
+
     // asks the player whether they want to play a tile or pass
     public TurnResult playTurn(TileBag tileBag, Board board, Scanner scanner, boolean firstMove) {
         System.out.println("It is player " + name + "'s turn.");
@@ -85,6 +97,7 @@ public class Player {
 
         boolean placingTiles = true;
         while (placingTiles) {
+            Character altLetter = null;
             System.out.println("\n" + name + "'s rack: ");
             printRack(tempRack);
 
@@ -92,6 +105,9 @@ public class Player {
             System.out.println("What letter would you like to play?: ");
             char letter = Character.toUpperCase(scanner.next().charAt(0));
 
+            if (letter == '~') {
+                altLetter = readBlankLetter(scanner);
+            }
             // input row
             System.out.println("Please provide the row for your tile (1-15): ");
             int row = scanner.nextInt() - 1;
@@ -106,19 +122,29 @@ public class Player {
             }
 
             // searches for letter in player's rack
-            Tile playedLetter = null;
+            Tile rackTile = null;
             for (Tile tile : tempRack) {
                 if (tile.getLetter() == letter) {
-                    playedLetter = tile;
+                    rackTile = tile;
                     break;
                 }
             }
 
-            if (playedLetter == null) {
+            if (rackTile == null) {
                 System.out.println("You don't have that letter.");
                 continue;
             }
-            tempRack.remove(playedLetter);
+
+            // blanks are played as a fresh tile carrying the chosen letter, so the
+            // rack's own tile (shared with the real rack until commit) is never
+            // mutated by a play that might still be rejected
+            Tile playedLetter = rackTile;
+            if (letter == '~') {
+                playedLetter = new Tile(rackTile.getLetter(), rackTile.getValue());
+                playedLetter.setAltLetter(altLetter);
+            }
+
+            tempRack.remove(rackTile);
             tempBoard.placeTile(row, col, playedLetter);
             playedLetters.add(playedLetter);
             playedPositions.add(new int[] { row, col });

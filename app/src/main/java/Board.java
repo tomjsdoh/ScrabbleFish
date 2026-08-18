@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.List;
 
 // the 15x15 grid of spaces, plus the word-reading and validity checks that operate on it
 public class Board {
@@ -172,7 +173,12 @@ public class Board {
                     return '#';
             }
         } else {
-            return (board[i][j].getSpaceLetter());
+            char letter = space.getSpaceLetter();
+            // a placed blank displays the letter it was assigned, not '~'
+            if (letter == '~') {
+                letter = space.getTile().getAltLetter();
+            }
+            return letter;
         }
 
     }
@@ -223,7 +229,12 @@ public class Board {
 
         // builds word from start to end point
         for (int i = start; i <= end; i++) {
-            stringBuilder.append(board[row][i].getSpaceLetter());
+            char letter = board[row][i].getSpaceLetter();
+            Tile tile = board[row][i].getTile();
+            if (letter == '~') {
+                letter = tile.getAltLetter();
+            }
+            stringBuilder.append(letter);
             wordSpaces.add(board[row][i]);
         }
 
@@ -260,9 +271,13 @@ public class Board {
 
         // builds word from start to end point
         for (int i = start; i <= end; i++) {
-            stringBuilder.append(board[i][col].getSpaceLetter());
+            char letter = board[i][col].getSpaceLetter();
+            Tile tile = board[i][col].getTile();
+            if (letter == '~') {
+                letter = tile.getAltLetter();
+            }
+            stringBuilder.append(letter);
             wordSpaces.add(board[i][col]);
-
         }
 
         // stores word

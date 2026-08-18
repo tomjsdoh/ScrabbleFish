@@ -110,6 +110,6 @@ public class Dictionary {
         letterValues.put('X', 8);
         letterValues.put('Y', 4);
         letterValues.put('Z', 10);
-        letterValues.put(' ', 0); // Blank tile
+        letterValues.put('~', 0); // Blank tile
     }
 }
